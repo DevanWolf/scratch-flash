@@ -67,7 +67,8 @@ public class LooksPrims {
 
 		primTable['show']					= primShow;
 		primTable['hide']					= primHide;
-//		primTable['hideAll']				= primHideAll;
+		primTable['showAll']				= primShowAll;
+		primTable['hideAll']				= primHideAll;
 
 		primTable['comeToFront']			= primGoFront;
 		primTable['goBackByLayers:']		= primGoBack;
@@ -75,11 +76,11 @@ public class LooksPrims {
 		primTable['setVideoState']			= primSetVideoState;
 		primTable['setVideoTransparency']	= primSetVideoTransparency;
 
-//		primTable['scrollAlign']			= primScrollAlign;
-//		primTable['scrollRight']			= primScrollRight;
-//		primTable['scrollUp']				= primScrollUp;
-//		primTable['xScroll']				= function(b:*):* { return app.stagePane.xScroll };
-//		primTable['yScroll']				= function(b:*):* { return app.stagePane.yScroll };
+		primTable['scrollAlign']			= primScrollAlign;
+		primTable['scrollRight']			= primScrollRight;
+		primTable['scrollUp']				= primScrollUp;
+		primTable['xScroll']				= function(b:*):* { return app.stagePane.xScroll };
+		primTable['yScroll']				= function(b:*):* { return app.stagePane.yScroll };
 
 		primTable['setRotationStyle']		= primSetRotationStyle;
 	}
@@ -257,10 +258,18 @@ public class LooksPrims {
 		interp.redraw();
 	}
 
+	private function primShowAll(b:Block):void {
+		for (var i:int = 0; i < app.stagePane.numChildren; i++) {
+			var o:* = app.stagePane.getChildAt(i);
+			if (o is ScratchSprite) {
+				o.visible = true;
+				o.updateBubble();
+			}
+		}
+		interp.redraw();
+	}
+
 	private function primHideAll(b:Block):void {
-		// Hide all sprites and delete all clones. Only works from the stage.
-		if (!interp.targetObj().isStage) return;
-		app.stagePane.deleteClones();
 		for (var i:int = 0; i < app.stagePane.numChildren; i++) {
 			var o:* = app.stagePane.getChildAt(i);
 			if (o is ScratchSprite) {
