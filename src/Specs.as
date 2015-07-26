@@ -110,7 +110,7 @@ public class Specs {
 	}
 
 	public static var commands:Array = [
-		// block specification					type, cat, opcode			default args (optional)
+		// block specification					type, cat, opcode				default args (optional)
 		// motion
 		["move %n steps",						" ", 1, "forward:",					10],
 		["turn @turnRight %n degrees",			" ", 1, "turnRight:",				15],
@@ -129,12 +129,22 @@ public class Specs {
 		["set y to %n",							" ", 1, "ypos:",					0],
 		["--"],
 		["if on edge, bounce",					" ", 1, "bounceOffEdge"],
-		["-"],
-		["set rotation style %m.rotationStyle",	" ", 1, "setRotationStyle", 		"left-right"],
 		["--"],
+		["set rotation style to %m.rotationStyle",	" ", 1, "setRotationStyle",		"left-right"],
+		["-"],
 		["x position",							"r", 1, "xpos"],
 		["y position",							"r", 1, "ypos"],
 		["direction",							"r", 1, "heading"],
+		["--"],
+		["x scroll",							"r", 1, "xScroll"],
+		["y scroll",							"r", 1, "yScroll"],
+
+		// stage motion (scrolling)
+		["scroll right %n",						" ", 101, "scrollRight",		10],
+		["scroll up %n",						" ", 101, "scrollUp",			10],
+		["align backdrop %m.scrollAlign",		" ", 101, "scrollAlign",		'bottom-left'],
+		["x scroll",							"r", 101, "xScroll"],
+		["y scroll",							"r", 101, "yScroll"],
 
 		// looks
 		["say %s for %n secs",					" ", 2, "say:duration:elapsed:from:",	"Hello!", 2],
@@ -145,9 +155,15 @@ public class Specs {
 		["show",								" ", 2, "show"],
 		["hide",								" ", 2, "hide"],
 		["-"],
-		["switch costume to %m.costume",		" ", 2, "lookLike:",				"costume1"],
+		["show all sprites",					" ", 2, "showAll"],
+		["hide all sprites",					" ", 2, "hideAll"],
+		["-"],
+		["switch costume to %d.costume",		" ", 2, "lookLike:",				"costume1"],
 		["next costume",						" ", 2, "nextCostume"],
-		["switch backdrop to %m.backdrop",		" ", 2, "startScene", 				"backdrop1"],
+		["-"],
+		["switch backdrop to %d.backdrop",		" ", 2, "startScene", 				"backdrop1"],
+		["switch backdrop to %d.backdrop and wait", " ", 2, "startSceneAndWait",		"backdrop1"],
+		["next backdrop",						" ", 2, "nextScene"],
 		["-"],
 		["change %m.effect effect by %n",		" ", 2, "changeGraphicEffect:by:",	"color", 25],
 		["set %m.effect effect to %n",			" ", 2, "setGraphicEffect:to:",		"color", 0],
@@ -160,24 +176,30 @@ public class Specs {
 		["go back %n layers",					" ", 2, "goBackByLayers:", 			1],
 		["-"],
 		["costume #",							"r", 2, "costumeIndex"],
-		["backdrop name",						"r", 2, "sceneName"],
+		["costume name",						"r", 2, "sceneName"],
 		["size",								"r", 2, "scale"],
+		["-"],
+		["backdrop #",							"r", 2, "backgroundIndex"],
+		["backdrop name",						"r", 2, "sceneName"],
 
 		// stage looks
-		["switch backdrop to %m.backdrop",			" ", 102, "startScene", 			"backdrop1"],
-		["switch backdrop to %m.backdrop and wait", " ", 102, "startSceneAndWait",		"backdrop1"],
-		["next backdrop",							" ", 102, "nextScene"],
+		["show all sprites",					" ", 102, "showAll"],
+		["hide all sprites",					" ", 102, "hideAll"],
+		["-"],
+		["switch backdrop to %d.backdrop",		" ", 102, "startScene", 			"backdrop1"],
+		["switch backdrop to %d.backdrop and wait", " ", 102, "startSceneAndWait",		"backdrop1"],
+		["next backdrop",						" ", 102, "nextScene"],
 		["-"],
 		["change %m.effect effect by %n",		" ", 102, "changeGraphicEffect:by:",	"color", 25],
 		["set %m.effect effect to %n",			" ", 102, "setGraphicEffect:to:",		"color", 0],
 		["clear graphic effects",				" ", 102, "filterReset"],
 		["-"],
-		["backdrop name",						"r", 102, "sceneName"],
 		["backdrop #",							"r", 102, "backgroundIndex"],
+		["backdrop name",						"r", 102, "sceneName"],
 
 		// sound
-		["play sound %m.sound",					" ", 3, "playSound:",						"pop"],
-		["play sound %m.sound until done",		" ", 3, "doPlaySoundAndWait",				"pop"],
+		["play sound %d.sound",					" ", 3, "playSound:",						"pop"],
+		["play sound %d.sound until done",		" ", 3, "doPlaySoundAndWait",				"pop"],
 		["stop all sounds",						" ", 3, "stopAllSounds"],
 		["-"],
 		["play drum %d.drum for %n beats",		" ", 3, "playDrum",							1, 0.25],
@@ -185,7 +207,6 @@ public class Specs {
 		["-"],
 		["play note %d.note for %n beats",		" ", 3, "noteOn:duration:elapsed:from:",	60, 0.5],
 		["set instrument to %d.instrument",		" ", 3, "instrument:",						1],
-
 		["-"],
 		["change volume by %n",					" ", 3, "changeVolumeBy:",					-10],
 		["set volume to %n%",					" ", 3, "setVolumeTo:", 					100],
@@ -193,7 +214,7 @@ public class Specs {
 		["-"],
 		["change tempo by %n",					" ", 3, "changeTempoBy:",					20],
 		["set tempo to %n bpm",					" ", 3, "setTempoTo:",						60],
-		["tempo",								"r", 3,  "tempo"],
+		["tempo",								"r", 3, "tempo"],
 
 		// pen
 		["clear",								" ", 4, "clearPenTrails"],
@@ -212,7 +233,6 @@ public class Specs {
 		["-"],
 		["change pen size by %n",				" ", 4, "changePenSizeBy:",		1],
 		["set pen size to %n",					" ", 4, "penSize:", 			1],
-		["-"],
 
 		// stage pen
 		["clear",								" ", 104, "clearPenTrails"],
@@ -238,14 +258,16 @@ public class Specs {
 		["if %b then",							"c", 6, "doIf"],
 		["if %b then",							"e", 6, "doIfElse"],
 		["wait until %b",						" ", 6, "doWaitUntil"],
+		["wait while %b",						" ", 6, "doWaitWhile"],
 		["repeat until %b",						"c", 6, "doUntil"],
+		["while %b",							"c", 6, "doWhile"],
 		["-"],
 		["stop %m.stop",						"f", 6, "stopScripts", "all"],
 		["-"],
 		["when I start as a clone",				"h", 6, "whenCloned"],
 		["create clone of %m.spriteOnly",		" ", 6, "createCloneOf"],
 		["delete this clone",					"f", 6, "deleteClone"],
-		["-"],
+		["delete all clones",					" ", 6, "deleteAllClones"],
 
 		// control - stage
 		["wait %n secs",						" ", 106, "wait:elapsed:from:",	1],
@@ -256,11 +278,14 @@ public class Specs {
 		["if %b then",							"c", 106, "doIf"],
 		["if %b then",							"e", 106, "doIfElse"],
 		["wait until %b",						" ", 106, "doWaitUntil"],
+		["wait while %b",						" ", 106, "doWaitWhile"],
 		["repeat until %b",						"c", 106, "doUntil"],
+		["while %b",							"c", 106, "doWhile"],
 		["-"],
 		["stop %m.stop",						"f", 106, "stopScripts", "all"],
 		["-"],
 		["create clone of %m.spriteOnly",		" ", 106, "createCloneOf"],
+		["delete all clones",					" ", 106, "deleteAllClones"],
 
 		// sensing
 		["touching %m.touching?",				"b", 7, "touching:",			""],
@@ -277,6 +302,7 @@ public class Specs {
 		["mouse y",								"r", 7, "mouseY"],
 		["-"],
 		["loudness",							"r", 7, "soundLevel"],
+		["loud?",								"b", 7, "isLoud"], // loudness > 10 (30 in 1.4)
 		["-"],
 		["video %m.videoMotionType on %m.stageOrThis", "r", 7, "senseVideoMotion", "motion"],
 		["turn video %m.videoState",			" ", 7, "setVideoState",			"on"],
@@ -284,6 +310,11 @@ public class Specs {
 		["-"],
 		["timer",								"r", 7, "timer"],
 		["reset timer",							" ", 7, "timerReset"],
+		["-"],
+		["counter",								"r", 7, "COUNT"],
+		["clear counter",						" ", 7, "CLR_COUNT"],
+		["increase counter",					" ", 7, "INCR_COUNT"],
+		["decrease counter",					" ", 7, "DECR_COUNT"],
 		["-"],
 		["%m.attribute of %m.spriteOrStage",	"r", 7, "getAttribute:of:"],
 		["-"],
@@ -301,6 +332,7 @@ public class Specs {
 		["mouse y",								"r", 107, "mouseY"],
 		["-"],
 		["loudness",							"r", 107, "soundLevel"],
+		["loud?",								"b", 107, "isLoud"], // loudness > 10 (30 in 1.4)
 		["-"],
 		["video %m.videoMotionType on %m.stageOrThis", "r", 107, "senseVideoMotion", "motion", "Stage"],
 		["turn video %m.videoState",			" ", 107, "setVideoState",			"on"],
@@ -309,6 +341,11 @@ public class Specs {
 		["timer",								"r", 107, "timer"],
 		["reset timer",							" ", 107, "timerReset"],
 		["-"],
+		["counter",								"r", 107, "COUNT"],
+		["clear counter",						" ", 107, "CLR_COUNT"],
+		["increase counter",					" ", 107, "INCR_COUNT"],
+		["decrease counter",					" ", 107, "DECR_COUNT"],
+		["-"],
 		["%m.attribute of %m.spriteOrStage",	"r", 107, "getAttribute:of:"],
 		["-"],
 		["current %m.timeAndDate", 				"r", 107, "timeAndDate",		"minute"],
@@ -316,35 +353,26 @@ public class Specs {
 		["username",							"r", 107, "getUserName"],
 
 		// operators
-		["%n + %n",								"r", 8, "+",					"", ""],
-		["%n - %n",								"r", 8, "-",					"", ""],
-		["%n * %n",								"r", 8, "*",					"", ""],
-		["%n / %n",								"r", 8, "/",					"", ""],
+		["%n %m.op %n",							"r", 8, "math",					"", "+", ""],
 		["-"],
-		["pick random %n to %n",		"r", 8, "randomFrom:to:",		1, 10],
+		["%m.mathOp of %n",						"r", 8, "computeFunction:of:",	"round", ""],
+		["%m.numberOp",							"r", 8, "fixedNumber",	"pi"],
 		["-"],
-		["%s < %s",								"b", 8, "<",					"", ""],
-		["%s = %s",								"b", 8, "=",					"", ""],
-		["%s > %s",								"b", 8, ">",					"", ""],
+		["%s %m.compare %s",					"b", 8, "compare"],
 		["-"],
-		["%b and %b",							"b", 8, "&"],
-		["%b or %b",							"b", 8, "|"],
+		["%b %m.andOr %b",						"b", 8, "compareBoolean"],
 		["not %b",								"b", 8, "not"],
 		["-"],
 		["join %s %s",							"r", 8, "concatenate:with:",	"hello ", "world"],
 		["letter %n of %s",						"r", 8, "letter:of:",			1, "world"],
 		["length of %s",						"r", 8, "stringLength:",		"world"],
-		["-"],
-		["%n mod %n",							"r", 8, "%",					"", ""],
-		["round %n",							"r", 8, "rounded", 				""],
-		["-"],
-		["%m.mathOp of %n",						"r", 8, "computeFunction:of:",	"sqrt", 9],
 
 		// variables
 		["set %m.var to %s",								" ", 9, SET_VAR],
 		["change %m.var by %n",								" ", 9, CHANGE_VAR],
 		["show variable %m.var",							" ", 9, "showVariable:"],
 		["hide variable %m.var",							" ", 9, "hideVariable:"],
+		["for each %m.var in %n",							"c", 9, "doForLoop", "variable", 10],
 
 		// lists
 		["add %s to %m.list",								" ", 12, "append:toList:"],
@@ -355,43 +383,41 @@ public class Specs {
 		["-"],
 		["item %d.listItem of %m.list",						"r", 12, "getLine:ofList:"],
 		["length of %m.list",								"r", 12, "lineCountOfList:"],
-		["%m.list contains %s?",								"b", 12, "list:contains:"],
+		["%m.list contains %s?",							"b", 12, "list:contains:"],
 		["-"],
 		["show list %m.list",								" ", 12, "showList:"],
 		["hide list %m.list",								" ", 12, "hideList:"],
 
 		// obsolete blocks from Scratch 1.4 that may be used in older projects
 		["play drum %n for %n beats",			" ", 98, "drum:duration:elapsed:from:", 1, 0.25], // Scratch 1.4 MIDI drum
-		["set instrument to %n",				" ", 98, "midiInstrument:", 1],
-		["loud?",								"b", 98, "isLoud"],
+		["set instrument to %n",				" ", 98, "midiInstrument:", 1], // Scratch 1.4 MIDI instrument
 
 		// obsolete blocks from Scratch 1.4 that are converted to new forms (so should never appear):
+		["%n + %n",								"r", 98, "+"],
+		["%n - %n",								"r", 98, "-"],
+		["%n * %n",								"r", 98, "*"],
+		["%n / %n",								"r", 98, "/"],
+		["%n mod %n",							"r", 98, "%"],
+		["%s < %s",								"b", 98, "<"],
+		["%s = %s",								"b", 98, "="],
+		["%s > %s",								"b", 98, ">"],
+		["%b and %b",							"b", 98, "&"],
+		["%b or %b",							"b", 98, "|"],
+		["pick random %n to %n",				"r", 98, "randomFrom:to:"],
+		["round %n",							"r", 98, "rounded"],
 		["abs %n",								"r", 98, "abs"],
 		["sqrt %n",								"r", 98, "sqrt"],
 		["stop script",							"f", 98, "doReturn"],
 		["stop all",							"f", 98, "stopAll"],
-		["switch to background %m.costume",		" ", 98, "showBackground:", "backdrop1"],
-		["next background",						" ", 98, "nextBackground"],
+		["switch backdrop to %m.backdrop",		" ", 98, "showBackground:", "backdrop1"],
+		["next backdrop",						" ", 98, "nextBackground"],
 		["forever if %b",						"cf",98, "doForeverIf"],
 
 		// testing and experimental control prims
-		["noop",								"r", 99, "COUNT"],
-		["counter",								"r", 99, "COUNT"],
-		["clear counter",						" ", 99, "CLR_COUNT"],
-		["incr counter",						" ", 99, "INCR_COUNT"],
-		["for each %m.varName in %s",			"c", 99, "doForLoop", "v", 10],
-		["while %b",							"c", 99, "doWhile"],
-		["all at once",							"c", 99, "warpSpeed"],
-
-		// stage motion (scrolling)
-		["scroll right %n",						" ", 99, "scrollRight",		10],
-		["scroll up %n",						" ", 99, "scrollUp",		10],
-		["align scene %m.scrollAlign",			" ", 99, "scrollAlign",		'bottom-left'],
-		["x scroll",							"r", 99, "xScroll"],
-		["y scroll",							"r", 99, "yScroll"],
+		["noop",								"r", 99, "NOOP"],
 
 		// other obsolete blocks from alpha/beta
-		["hide all sprites",					" ", 99, "hideAll"],
+		["all at once",							"c", 99, "warpSpeed"],
 		["user id",								"r", 99, "getUserId"],
 
 	];
